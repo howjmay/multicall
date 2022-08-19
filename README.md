@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/Alethio/multicall-go.svg?style=svg)](https://circleci.com/gh/Alethio/multicall-go)
+Simplified monorepo of multicall from [Alethio/web3-multicall-go](https://github.com/Alethio/web3-multicall-go)
 
 ### Multicall
 

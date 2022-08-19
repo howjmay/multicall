@@ -2,7 +2,8 @@ package multicall
 
 import (
 	"encoding/hex"
-	"github.com/alethio/web3-go/ethrpc"
+
+	"github.com/howjmay/multicall/ethrpc"
 )
 
 type Multicall interface {
@@ -46,7 +47,7 @@ type Result struct {
 const AggregateMethod = "0x17352e13"
 
 func (mc multicall) CallRaw(calls ViewCalls, block string) (*Result, error) {
-	resultRaw, err := mc.makeRequest(calls, block)
+	resultRaw, err := mc.sendRequest(calls, block)
 	if err != nil {
 		return nil, err
 	}
@@ -54,14 +55,14 @@ func (mc multicall) CallRaw(calls ViewCalls, block string) (*Result, error) {
 }
 
 func (mc multicall) Call(calls ViewCalls, block string) (*Result, error) {
-	resultRaw, err := mc.makeRequest(calls, block)
+	resultRaw, err := mc.sendRequest(calls, block)
 	if err != nil {
 		return nil, err
 	}
 	return calls.decode(resultRaw)
 }
 
-func (mc multicall) makeRequest(calls ViewCalls, block string) (string, error) {
+func (mc multicall) sendRequest(calls ViewCalls, block string) (string, error) {
 	payloadArgs, err := calls.callData()
 	if err != nil {
 		return "", err
@@ -71,7 +72,7 @@ func (mc multicall) makeRequest(calls ViewCalls, block string) (string, error) {
 	payload["data"] = AggregateMethod + hex.EncodeToString(payloadArgs)
 	payload["gas"] = mc.config.Gas
 	var resultRaw string
-	err = mc.eth.MakeRequest(&resultRaw, ethrpc.ETHCall, payload, block)
+	err = mc.eth.SendRequest(&resultRaw, ethrpc.ETHCall, payload, block)
 	return resultRaw, err
 }
 

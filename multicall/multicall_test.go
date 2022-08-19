@@ -3,11 +3,12 @@ package multicall_test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/alethio/web3-go/ethrpc"
-	"github.com/alethio/web3-go/ethrpc/provider/httprpc"
-	"github.com/alethio/web3-multicall-go/multicall"
 	"testing"
 	"time"
+
+	"github.com/howjmay/multicall/ethrpc"
+	"github.com/howjmay/multicall/ethrpc/provider/httprpc"
+	"github.com/howjmay/multicall/multicall"
 )
 
 func TestExampleViwCall(t *testing.T) {
