@@ -16,3 +16,8 @@ func (bi BigIntJSONString) String() string {
 	gobi := big.Int(bi)
 	return (&gobi).String()
 }
+
+func (bi BigIntJSONString) ToBigInt() *big.Int {
+	gobi := big.Int(bi)
+	return &gobi
+}
