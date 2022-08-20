@@ -4,12 +4,13 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"github.com/ethereum/go-ethereum/accounts/abi"
-	"github.com/ethereum/go-ethereum/crypto"
 	"math/big"
 	"reflect"
 	"regexp"
 	"strings"
+
+	"github.com/ethereum/go-ethereum/accounts/abi"
+	"github.com/ethereum/go-ethereum/crypto"
 )
 
 type ViewCall struct {
@@ -38,11 +39,11 @@ func (call ViewCall) Validate() error {
 	return nil
 }
 
-var insideParens = regexp.MustCompile("\\(.*?\\)")
-var numericArg = regexp.MustCompile("u?int(256)|(8)")
+var patternInsideParenthesis = regexp.MustCompile(`\(.*?\)`)
+var patternNumericArg = regexp.MustCompile("u?int(256)|(8)")
 
 func (call ViewCall) argumentTypes() []string {
-	rawArgs := insideParens.FindAllString(call.method, -1)[0]
+	rawArgs := patternInsideParenthesis.FindAllString(call.method, -1)[0]
 	rawArgs = strings.Replace(rawArgs, "(", "", -1)
 	rawArgs = strings.Replace(rawArgs, ")", "", -1)
 	if rawArgs == "" {
@@ -56,7 +57,7 @@ func (call ViewCall) argumentTypes() []string {
 }
 
 func (call ViewCall) returnTypes() []string {
-	rawArgs := insideParens.FindAllString(call.method, -1)[1]
+	rawArgs := patternInsideParenthesis.FindAllString(call.method, -1)[1]
 	rawArgs = strings.Replace(rawArgs, "(", "", -1)
 	rawArgs = strings.Replace(rawArgs, ")", "", -1)
 	args := strings.Split(rawArgs, ",")
@@ -127,13 +128,12 @@ func (call ViewCall) getArgument(index int, argumentType string) (interface{}, e
 			return nil, fmt.Errorf("expected address argument to be a string")
 		}
 		return toByteArray(address)
-	} else if numericArg.MatchString(argumentType) {
+	} else if patternNumericArg.MatchString(argumentType) {
 		if num, ok := arg.(json.Number); ok {
 			if v, err := num.Int64(); err != nil {
 				return big.NewInt(v), nil
 			} else if v, err := num.Float64(); err != nil {
 				return big.NewInt(int64(v)), nil
-			} else {
 			}
 		} else {
 			int64 := reflect.TypeOf(int64(0))
@@ -155,7 +155,7 @@ func (call ViewCall) getArgument(index int, argumentType string) (interface{}, e
 
 func (call ViewCall) decode(raw []byte) ([]interface{}, error) {
 	retTypes := call.returnTypes()
-	args := make(abi.Arguments, 0, 0)
+	args := make(abi.Arguments, 0)
 	for index, retTypeStr := range retTypes {
 		retType, err := abi.NewType(retTypeStr, "", nil)
 		if err != nil {

@@ -1,8 +1,9 @@
 package multicall
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestViewCall(t *testing.T) {
@@ -42,7 +43,7 @@ func TestCatchPanicOnInterfaceIssue(t *testing.T) {
 	assert.Error(t, err, "expected address argument to be a string")
 }
 
-func TestEncodeNumericArgument(t *testing.T) {
+func TestEncodepatternNumericArgument(t *testing.T) {
 	vc1 := ViewCall{
 		id:        "key",
 		target:    "0x0",

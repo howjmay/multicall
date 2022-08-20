@@ -3,44 +3,44 @@ package ethrpc
 // json rpc methods
 const (
 	// parity
-	ParitySubscribe           = "parity_subscribe"
-	ParityPendingTransactions = "parity_pendingTransactions"
+	Parity_Subscribe           = "parity_subscribe"
+	Parity_PendingTransactions = "parity_pendingTransactions"
 
 	// geth
-	GETHTxPoolContent = "txpool_content"
+	GETH_TxPoolContent = "txpool_content"
 
 	// net
-	NetPeerCount = "net_peerCount"
+	Net_PeerCount = "net_peerCount"
 
 	// web3
-	WEB3ClientVersion = "web3_clientVersion"
+	WEB3_ClientVersion = "web3_clientVersion"
 
 	// eth
-	ETHBlockNumber                      = "eth_blockNumber"
-	ETHCall                             = "eth_call"
-	ETHGetBalance                       = "eth_getBalance"
-	ETHGetBlockByNumber                 = "eth_getBlockByNumber"
-	ETHGetBlockTransactionCountByNumber = "eth_getBlockTransactionCountByNumber"
-	ETHGetCode                          = "eth_getCode"
-	ETHGetFilterChanges                 = "eth_getFilterChanges"
-	ETHGetTransactionByHash             = "eth_getTransactionByHash"
-	ETHGetTransactionReceipt            = "eth_getTransactionReceipt"
-	ETHGetUncleByBlockHashAndIndex      = "eth_getUncleByBlockHashAndIndex"
-	ETHGetUncleByBlockNumberAndIndex    = "eth_getUncleByBlockNumberAndIndex"
-	ETHPendingTransactionFilter         = "eth_newPendingTransactionFilter"
-	ETHSubscribe                        = "eth_subscribe"
+	ETH_BlockNumber                      = "eth_blockNumber"
+	ETH_Call                             = "eth_call"
+	ETH_GetBalance                       = "eth_getBalance"
+	ETH_GetBlockByNumber                 = "eth_getBlockByNumber"
+	ETH_GetBlockTransactionCountByNumber = "eth_getBlockTransactionCountByNumber"
+	ETH_GetCode                          = "eth_getCode"
+	ETH_GetFilterChanges                 = "eth_getFilterChanges"
+	ETH_GetTransactionByHash             = "eth_getTransactionByHash"
+	ETH_GetTransactionReceipt            = "eth_getTransactionReceipt"
+	ETH_GetUncleByBlockHashAndIndex      = "eth_getUncleByBlockHashAndIndex"
+	ETH_GetUncleByBlockNumberAndIndex    = "eth_getUncleByBlockNumberAndIndex"
+	ETH_PendingTransactionFilter         = "eth_newPendingTransactionFilter"
+	ETH_Subscribe                        = "eth_subscribe"
 
 	// trace
-	TraceBlock                   = "trace_block"
-	TraceReplayBlockTransactions = "trace_replayBlockTransactions"
+	Trace_Block                   = "trace_block"
+	Trace_ReplayBlockTransactions = "trace_replayBlockTransactions"
 
 	// eth pubsub
-	ETHNewHeads               = "newHeads"
-	ETHNewPendingTransactions = "newPendingTransactions"
+	ETH_NewHeads               = "newHeads"
+	ETH_NewPendingTransactions = "newPendingTransactions"
 
-	// consts
-	ClientGETH   = "geth"
-	ClientParity = "parity"
+	// client
+	Client_GETH   = "geth"
+	Client_Parity = "parity"
 )
 
 // ERC20 signatures

@@ -45,40 +45,40 @@ func (e *ETH) Stop() {
 
 // GetLatestBlock with or without full transactions array
 func (e *ETH) GetLatestBlock() (b types.Block, err error) {
-	err = e.SendRequest(&b, ETHGetBlockByNumber, "latest", true)
+	err = e.SendRequest(&b, ETH_GetBlockByNumber, "latest", true)
 	return
 }
 
 // GetBlockByNumber gets specified block with full transaction array
 func (e *ETH) GetBlockByNumber(number string) (b types.Block, err error) {
-	err = e.SendRequest(&b, ETHGetBlockByNumber, number, true)
+	err = e.SendRequest(&b, ETH_GetBlockByNumber, number, true)
 	return
 }
 
 // GetBlockTransactionCountByNumber https://wiki.parity.io/JSONRPC-eth-module.html#eth_getblocktransactioncountbynumber
 func (e *ETH) GetBlockTransactionCountByNumber(number string) (count string, err error) {
-	err = e.SendRequest(&count, ETHGetBlockTransactionCountByNumber, number)
+	err = e.SendRequest(&count, ETH_GetBlockTransactionCountByNumber, number)
 	return
 }
 
 // GetUncleByBlockHashAndIndex retrieves the index-nth uncle of the
 // block with the hash blockHash
 func (e *ETH) GetUncleByBlockHashAndIndex(hash string, index string) (b types.Block, err error) {
-	err = e.SendRequest(&b, ETHGetUncleByBlockHashAndIndex, hash, index)
+	err = e.SendRequest(&b, ETH_GetUncleByBlockHashAndIndex, hash, index)
 	return
 }
 
 // GetUncleByBlockNumberAndIndex retrieves the index-nth uncle of the
 // block with the number blockNumber
 func (e *ETH) GetUncleByBlockNumberAndIndex(blockNumber string, index string) (b types.Block, err error) {
-	err = e.SendRequest(&b, ETHGetUncleByBlockNumberAndIndex, blockNumber, index)
+	err = e.SendRequest(&b, ETH_GetUncleByBlockNumberAndIndex, blockNumber, index)
 	return
 }
 
 // GetPeerCount gets current peer count
 func (e *ETH) GetPeerCount() (peers int64, err error) {
 	var ps string
-	err = e.SendRequest(&ps, NetPeerCount)
+	err = e.SendRequest(&ps, Net_PeerCount)
 	if err != nil {
 		return
 	}
@@ -88,7 +88,7 @@ func (e *ETH) GetPeerCount() (peers int64, err error) {
 
 // GetVersion gets current eth client version string
 func (e *ETH) GetVersion() (ver string, err error) {
-	err = e.SendRequest(&ver, WEB3ClientVersion)
+	err = e.SendRequest(&ver, WEB3_ClientVersion)
 	return ver, err
 }
 
@@ -101,10 +101,10 @@ func (e *ETH) GetClient() (string, error) {
 	c, err := e.GetVersion()
 	if err == nil {
 		c = strings.ToLower(c)
-		if strings.HasPrefix(c, ClientGETH) {
-			client = ClientGETH
-		} else if strings.HasPrefix(c, ClientParity) {
-			client = ClientParity
+		if strings.HasPrefix(c, Client_GETH) {
+			client = Client_GETH
+		} else if strings.HasPrefix(c, Client_Parity) {
+			client = Client_Parity
 		}
 	}
 	return client, err
@@ -112,19 +112,19 @@ func (e *ETH) GetClient() (string, error) {
 
 // SetPendingTransactionsFilter sets pending transaction filter for ETHGetFilterChanges
 func (e *ETH) SetPendingTransactionsFilter() (id string, err error) {
-	err = e.SendRequest(&id, ETHPendingTransactionFilter)
+	err = e.SendRequest(&id, ETH_PendingTransactionFilter)
 	return
 }
 
 // GetFilterChanges gets filtered entities, since last poll or set filter
 func (e *ETH) GetFilterChanges(id string) (t []interface{}, err error) {
-	err = e.SendRequest(&t, ETHGetFilterChanges, id)
+	err = e.SendRequest(&t, ETH_GetFilterChanges, id)
 	return
 }
 
 // GetPendingFilterChanges gets all pending transactions, filtered, since last poll or set filter
 func (e *ETH) GetPendingFilterChanges(id string) (t []string, err error) {
-	err = e.SendRequest(&t, ETHGetFilterChanges, id)
+	err = e.SendRequest(&t, ETH_GetFilterChanges, id)
 	return
 }
 
@@ -132,11 +132,11 @@ func (e *ETH) GetPendingFilterChanges(id string) (t []string, err error) {
 func (e *ETH) GetPendingTransactions() ([]types.Transaction, error) {
 	var txs []types.Transaction
 	var err error
-	if e.client == ClientParity {
-		err = e.SendRequest(&txs, ParityPendingTransactions)
-	} else if e.client == ClientGETH {
+	if e.client == Client_Parity {
+		err = e.SendRequest(&txs, Parity_PendingTransactions)
+	} else if e.client == Client_GETH {
 		var pool types.GethTxPool
-		err = e.SendRequest(&pool, GETHTxPoolContent)
+		err = e.SendRequest(&pool, GETH_TxPoolContent)
 
 		for typ := range pool {
 			for addr := range pool[typ] {
@@ -155,7 +155,7 @@ func (e *ETH) GetPendingTransactions() ([]types.Transaction, error) {
 // GetTransactionByHash gets a transaction by transaction hash
 func (e *ETH) GetTransactionByHash(hash string) (types.Transaction, error) {
 	var t types.Transaction
-	err := e.SendRequest(&t, ETHGetTransactionByHash, hash)
+	err := e.SendRequest(&t, ETH_GetTransactionByHash, hash)
 	// geth correction
 	if t.BlockNumber == "" && t.BlockHash == "0x0000000000000000000000000000000000000000000000000000000000000000" {
 		t.BlockHash = ""
@@ -165,14 +165,14 @@ func (e *ETH) GetTransactionByHash(hash string) (types.Transaction, error) {
 
 // GetTransactionReceipt gets the transaction receipt ofr a specific transaction hash
 func (e *ETH) GetTransactionReceipt(hash string) (r types.Receipt, err error) {
-	err = e.SendRequest(&r, ETHGetTransactionReceipt, hash)
+	err = e.SendRequest(&r, ETH_GetTransactionReceipt, hash)
 	return
 }
 
 // GetRawBalanceAtBlock returns the balance of an address at a given blockNumber as a hex string
 func (e *ETH) GetRawBalanceAtBlock(address, blockNumber string) (string, error) {
 	var result string
-	err := e.SendRequest(&result, ETHGetBalance, address, blockNumber)
+	err := e.SendRequest(&result, ETH_GetBalance, address, blockNumber)
 	if err != nil {
 		return "", err
 	}
@@ -200,7 +200,7 @@ func (e *ETH) GetRawTokenBalanceAtBlock(address, token, blockNumber string) (str
 		BalanceOfFunction +
 			strings.Repeat("0", 32-len(BalanceOfFunction)+2) +
 			strings.Replace(address, "0x", "", 1)
-	err := e.SendRequest(&result, ETHCall, payload, blockNumber)
+	err := e.SendRequest(&result, ETH_Call, payload, blockNumber)
 	if err != nil {
 		return "", err
 	}
@@ -222,7 +222,7 @@ func (e *ETH) GetTokenBalanceAtBlock(address, token, blockNumber string) (*big.I
 // GetBlockNumber returns the number of most recent block.
 func (e *ETH) GetBlockNumber() (int64, error) {
 	var n string
-	err := e.SendRequest(&n, ETHBlockNumber)
+	err := e.SendRequest(&n, ETH_BlockNumber)
 	if err != nil {
 		return 0, err
 	}
@@ -265,7 +265,7 @@ func (e *ETH) GetERC20Decimals(address string) (uint8, error) {
 // GetCode returns the bytecode of a contract
 func (e *ETH) GetCode(a string) ([]byte, error) {
 	var s string
-	err := e.SendRequest(&s, ETHGetCode, a, "latest")
+	err := e.SendRequest(&s, ETH_GetCode, a, "latest")
 	if err != nil {
 		return nil, err
 	}
@@ -277,13 +277,13 @@ func (e *ETH) GetCode(a string) ([]byte, error) {
 // Traces
 func (e *ETH) TraceBlock(blockNumber string) ([]types.Trace, error) {
 	var traces []types.Trace
-	err := e.SendRequest(&traces, TraceBlock, blockNumber)
+	err := e.SendRequest(&traces, Trace_Block, blockNumber)
 	return traces, err
 }
 
 func (e *ETH) TraceReplayBlockTransactions(blockNumber string, traceTypes ...string) ([]types.TransactionReplay, error) {
 	var replays []types.TransactionReplay
-	err := e.SendRequest(&replays, TraceReplayBlockTransactions, blockNumber, traceTypes)
+	err := e.SendRequest(&replays, Trace_ReplayBlockTransactions, blockNumber, traceTypes)
 	return replays, err
 }
 
@@ -304,7 +304,7 @@ func (e *ETH) NewHeadsSubscription() (r chan *types.BlockHeader, err error) {
 		close(res)
 	}(r, j)
 
-	err = e.Subscribe(j, ETHSubscribe, ETHNewHeads)
+	err = e.Subscribe(j, ETH_Subscribe, ETH_NewHeads)
 	return
 }
 
@@ -325,7 +325,7 @@ func (e *ETH) NewPendingTransactionsSubscription() (r chan *string, err error) {
 		close(res)
 	}(r, j)
 
-	err = e.Subscribe(j, ETHSubscribe, ETHNewPendingTransactions)
+	err = e.Subscribe(j, ETH_Subscribe, ETH_NewPendingTransactions)
 	return
 }
 
@@ -350,7 +350,7 @@ func (e *ETH) NewBlockNumberSubscription() (r chan *int64, err error) {
 		close(res)
 	}(r, j)
 
-	err = e.Subscribe(j, ParitySubscribe, ETHBlockNumber, []string{})
+	err = e.Subscribe(j, Parity_Subscribe, ETH_BlockNumber, []string{})
 	return
 }
 
@@ -381,7 +381,7 @@ func (e *ETH) CallContractFunction(function string, address string, gas string) 
 	obj["to"] = address
 	obj["data"] = function
 	obj["gas"] = gas
-	err := e.SendRequest(&s, ETHCall, obj, "latest")
+	err := e.SendRequest(&s, ETH_Call, obj, "latest")
 	if s == "0x" {
 		return "", errors.Empty
 	}

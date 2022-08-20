@@ -72,7 +72,7 @@ func (mc multicall) sendRequest(calls ViewCalls, block string) (string, error) {
 	payload["data"] = AggregateMethod + hex.EncodeToString(payloadArgs)
 	payload["gas"] = mc.config.Gas
 	var resultRaw string
-	err = mc.eth.SendRequest(&resultRaw, ethrpc.ETHCall, payload, block)
+	err = mc.eth.SendRequest(&resultRaw, ethrpc.ETH_Call, payload, block)
 	return resultRaw, err
 }
 

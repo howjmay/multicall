@@ -9,10 +9,12 @@ import (
 	"github.com/howjmay/multicall/ethrpc"
 	"github.com/howjmay/multicall/ethrpc/provider/httprpc"
 	"github.com/howjmay/multicall/multicall"
+	"github.com/stretchr/testify/require"
 )
 
 func TestExampleViwCall(t *testing.T) {
 	eth, err := getETH("https://mainnet.infura.io/v3/17ed7fe26d014e5b9be7dfff5368c69d")
+	require.NoError(t, err)
 	vc := multicall.NewViewCall(
 		"key.1",
 		"0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643",
@@ -23,9 +25,7 @@ func TestExampleViwCall(t *testing.T) {
 	mc, _ := multicall.New(eth)
 	block := "latest"
 	res, err := mc.Call(vcs, block)
-	if err != nil {
-		panic(err)
-	}
+	require.NoError(t, err)
 
 	resJson, _ := json.Marshal(res)
 	fmt.Println(string(resJson))

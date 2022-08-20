@@ -7,7 +7,12 @@ import (
 
 type BigIntJSONString big.Int
 
-func (i BigIntJSONString) MarshalJSON() ([]byte, error) {
-	backToInt := big.Int(i)
+func (bi BigIntJSONString) MarshalJSON() ([]byte, error) {
+	backToInt := big.Int(bi)
 	return []byte(fmt.Sprintf(`"%s"`, backToInt.String())), nil
+}
+
+func (bi BigIntJSONString) String() string {
+	gobi := big.Int(bi)
+	return (&gobi).String()
 }
