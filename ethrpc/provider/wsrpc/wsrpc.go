@@ -15,6 +15,7 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/howjmay/multicall/errors"
 	"github.com/howjmay/multicall/ethrpc/jsonrpc"
+	"github.com/sirupsen/logrus"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -74,7 +75,7 @@ func (p *WSProvider) CallRaw(method string, params ...interface{}) ([]byte, erro
 	case resp = <-receiver:
 		break
 	case <-p.cancel:
-		return nil, errors.ConnectionClosed
+		return nil, errors.Err_ConnectionClosed
 	}
 
 	return resp.Raw, nil
@@ -93,18 +94,17 @@ func (p *WSProvider) Call(result interface{}, method string, params ...interface
 	case resp = <-receiver:
 		break
 	case <-p.cancel:
-		return errors.ConnectionClosed
+		return errors.Err_ConnectionClosed
 	}
 
-	null := string(json.RawMessage([]byte("null")))
-	if string(resp.Result) == null {
-		return errors.Nil
+	if resp.IsResultNull() {
+		return errors.Err_Null
 	}
 
 	if resp.Error != nil {
 		switch resp.Error.Code {
 		case -32015: // VM execution error
-			err := errors.VMExecutionError.(*errors.RpcError)
+			err := errors.Err_VMExecutionError.(*errors.RpcError)
 			err.Code = resp.Error.Code
 			err.Details = resp.Error.Data
 			return err
@@ -152,7 +152,7 @@ func (p *WSProvider) sendRequest(receiver chan *jsonrpc.JSONRPCResponse, method 
 	dead := p.dead
 	p.deadMu.Unlock()
 	if dead {
-		return errors.ConnectionClosed
+		return errors.Err_ConnectionClosed
 	}
 
 	id := strconv.FormatInt(rand.Int63(), 16)
@@ -189,7 +189,7 @@ func (p *WSProvider) connect() error {
 			}
 
 		}
-		log.Debugln("connected to server over websockets")
+		logrus.Debug("connected to server over websocket")
 		p.client = c
 
 		// TODO disable for now check https://github.com/gorilla/websocket/issues/355

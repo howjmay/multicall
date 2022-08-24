@@ -177,7 +177,7 @@ func (e *ETH) GetRawBalanceAtBlock(address, blockNumber string) (string, error) 
 		return "", err
 	}
 	if result == "0x" || result == "" {
-		return "", errors.Empty
+		return "", errors.Err_Empty
 	}
 	return result, nil
 }
@@ -205,7 +205,7 @@ func (e *ETH) GetRawTokenBalanceAtBlock(address, token, blockNumber string) (str
 		return "", err
 	}
 	if result == "0x" || result == "" {
-		return "", errors.Empty
+		return "", errors.Err_Empty
 	}
 	return result, nil
 }
@@ -250,14 +250,14 @@ func (e *ETH) GetERC20Decimals(address string) (uint8, error) {
 	if err != nil {
 		switch err.(type) {
 		case *strconv.NumError:
-			return 0, errors.InvalidUInt8
+			return 0, errors.Err_InvalidUInt8
 		default:
 			return 0, err
 		}
 
 	}
 	if d < 0 || d > 255 {
-		return 0, errors.InvalidUInt8
+		return 0, errors.Err_InvalidUInt8
 	}
 	return uint8(d), nil
 }
@@ -383,7 +383,7 @@ func (e *ETH) CallContractFunction(function string, address string, gas string) 
 	obj["gas"] = gas
 	err := e.SendRequest(&s, ETH_Call, obj, "latest")
 	if s == "0x" {
-		return "", errors.Empty
+		return "", errors.Err_Empty
 	}
 	return s, err
 }

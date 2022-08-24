@@ -52,6 +52,10 @@ func (msg *JSONRPCResponse) HasValidID() bool {
 	return len(msg.ID) > 0 && msg.ID[0] != '{' && msg.ID[0] != '['
 }
 
+func (msg *JSONRPCResponse) IsResultNull() bool {
+	return string(msg.Result) == "null"
+}
+
 // ValidID decodes the id if it is valid
 func (msg *JSONRPCResponse) ValidID() (string, error) {
 	if !msg.HasValidID() {

@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestExampleViwCall(t *testing.T) {
+func TestExampleViewCall(t *testing.T) {
 	eth, err := getETH("https://mainnet.infura.io/v3/17ed7fe26d014e5b9be7dfff5368c69d")
 	require.NoError(t, err)
 	vc := multicall.NewViewCall(

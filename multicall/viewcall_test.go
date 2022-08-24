@@ -43,7 +43,7 @@ func TestCatchPanicOnInterfaceIssue(t *testing.T) {
 	assert.Error(t, err, "expected address argument to be a string")
 }
 
-func TestEncodepatternNumericArgument(t *testing.T) {
+func TestEncodePatternNumericArgument(t *testing.T) {
 	vc1 := ViewCall{
 		id:        "key",
 		target:    "0x0",

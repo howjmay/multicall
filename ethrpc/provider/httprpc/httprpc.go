@@ -35,9 +35,7 @@ func (p *HTTPProvider) Start() error {
 }
 
 // Stop does nothing on the http provider
-func (p *HTTPProvider) Stop() {
-	return
-}
+func (p *HTTPProvider) Stop() {}
 
 // CallRaw calls a RPC method and returns the raw result
 func (p *HTTPProvider) CallRaw(method string, params ...interface{}) ([]byte, error) {
@@ -45,7 +43,7 @@ func (p *HTTPProvider) CallRaw(method string, params ...interface{}) ([]byte, er
 	return p.loader.Load(req)
 }
 
-// Call calls a RPC method and returns coresponding object
+// Call calls a RPC method and returns corresponding object
 func (p *HTTPProvider) Call(result interface{}, method string, params ...interface{}) error {
 	req := jsonrpc.BuildRequest(method, params)
 	raw, err := p.loader.Load(req)
@@ -58,15 +56,14 @@ func (p *HTTPProvider) Call(result interface{}, method string, params ...interfa
 		return err
 	}
 
-	null := string(json.RawMessage([]byte("null")))
-	if string(resp.Result) == null {
-		return errors.Nil
+	if resp.IsResultNull() {
+		return errors.Err_Null
 	}
 
 	if resp.Error != nil {
 		switch resp.Error.Code {
 		case -32015: // VM execution error
-			err := errors.VMExecutionError.(*errors.RpcError)
+			err := errors.Err_VMExecutionError.(*errors.RpcError)
 			err.Code = resp.Error.Code
 			err.Details = resp.Error.Data
 			return err
@@ -85,7 +82,7 @@ func (p *HTTPProvider) Call(result interface{}, method string, params ...interfa
 
 // Subscribe creates a subscription to event using method. not available on http
 func (p *HTTPProvider) Subscribe(receiver chan *json.RawMessage, method string, event string, params ...interface{}) error {
-	return fmt.Errorf("subscriptions not supported over http, please use websockets")
+	return fmt.Errorf("subscriptions not supported over http, please use websocket")
 }
 
 // New initializes a Client and returns it
