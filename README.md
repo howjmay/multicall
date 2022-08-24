@@ -59,7 +59,7 @@ lastBlockHash := res.Calls["key-1"].Decoded[0].([32]byte);
 
 someBalanceSuccess := res.Calls["key-2"].Success;
 someBalance := res.Calls["key-2"].Decoded[0].(*multicall.BigIntJSONString);
-someBalanceInt := big.Int(*someBalance);
+someBalanceInt := someBalance.ToBigInt();
 ```
 
 In the example above we batch two calls to two different contracts and get back a map of `CallResults` which contain the exit value an array of returned values (`[]interface{}`) which are decoded by the `go-ethereum` package.
