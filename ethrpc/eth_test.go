@@ -1,4 +1,4 @@
-package ethrpc
+package ethrpc_test
 
 import (
 	"encoding/hex"
@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/howjmay/multicall/ethrpc"
 	"github.com/howjmay/multicall/ethrpc/provider/httprpc"
 	"github.com/howjmay/multicall/types"
 
@@ -118,7 +119,7 @@ func TestRequests(t *testing.T) {
 	}
 }
 
-func setup(t *testing.T) (*ETH, func() error) {
+func setup(t *testing.T) (*ethrpc.ETH, func() error) {
 	t.Helper()
 	srv, err := mock.New(8545, "../testdata/mock")
 	assert.Nil(t, err)
@@ -129,7 +130,7 @@ func setup(t *testing.T) (*ETH, func() error) {
 		t.Fatal(err)
 	}
 
-	e, err := New(p)
+	e, err := ethrpc.New(p)
 	if err != nil {
 		t.Fatal(err)
 	}

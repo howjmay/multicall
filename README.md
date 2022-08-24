@@ -1,4 +1,4 @@
-Simplified monorepo of multicall from [Alethio/web3-multicall-go](https://github.com/Alethio/web3-multicall-go)
+*Simplified monorepo of multicall from [web3-multicall-go](https://github.com/Alethio/web3-multicall-go)*
 
 ### Multicall
 
