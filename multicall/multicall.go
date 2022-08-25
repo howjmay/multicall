@@ -2,8 +2,10 @@ package multicall
 
 import (
 	"encoding/hex"
+	"time"
 
 	"github.com/howjmay/multicall/ethrpc"
+	"github.com/howjmay/multicall/ethrpc/provider/httprpc"
 )
 
 type Multicall interface {
@@ -78,4 +80,13 @@ func (mc multicall) sendRequest(calls ViewCalls, block string) (string, error) {
 
 func (mc multicall) Contract() string {
 	return mc.config.MulticallAddress
+}
+
+func GetETH(url string) (ethrpc.ETHInterface, error) {
+	provider, err := httprpc.New(url)
+	if err != nil {
+		return nil, err
+	}
+	provider.SetHTTPTimeout(5 * time.Second)
+	return ethrpc.New(provider)
 }

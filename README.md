@@ -34,6 +34,10 @@ In this case the contract deployed has to maintain the same function signature a
 #### Calling
 
 ```go
+eth, err := multicall.GetETH("https://rpc.ankr.com/eth")
+if err != nil {
+    panic(err)
+}
 vcs := ViewCalls{
     multicall.NewViewCall(
         "key-1",

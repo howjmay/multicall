@@ -4,21 +4,18 @@ import (
 	"encoding/json"
 	"fmt"
 	"testing"
-	"time"
 
-	"github.com/howjmay/multicall/ethrpc"
-	"github.com/howjmay/multicall/ethrpc/provider/httprpc"
 	"github.com/howjmay/multicall/multicall"
 	"github.com/stretchr/testify/require"
 )
 
 func TestExampleViewCall(t *testing.T) {
-	eth, err := getETH("https://mainnet.infura.io/v3/17ed7fe26d014e5b9be7dfff5368c69d")
+	eth, err := multicall.GetETH("https://rpc.ankr.com/eth")
 	require.NoError(t, err)
 	vc := multicall.NewViewCall(
-		"key.1",
-		"0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643",
-		"totalReserves()(uint256)",
+		"SHIB-symbol",
+		"0x95aD61b0a150d79219dCF64E1E6Cc01f0B64C4cE", // shib contract address
+		"symbol()(string)",
 		[]interface{}{},
 	)
 	vcs := multicall.ViewCalls{vc}
@@ -26,19 +23,13 @@ func TestExampleViewCall(t *testing.T) {
 	block := "latest"
 	res, err := mc.Call(vcs, block)
 	require.NoError(t, err)
+	require.True(t, res.Calls["SHIB-symbol"].Success)
+	symbolRes := res.Calls["SHIB-symbol"].Decoded[0].(string)
+	require.Equal(t, "SHIB", symbolRes)
+	require.Len(t, res.Calls, 1)
 
-	resJson, _ := json.Marshal(res)
+	resJson, err := json.Marshal(res)
+	require.NoError(t, err)
 	fmt.Println(string(resJson))
 	fmt.Println(res)
-	fmt.Println(err)
-
-}
-
-func getETH(url string) (ethrpc.ETHInterface, error) {
-	provider, err := httprpc.New(url)
-	if err != nil {
-		return nil, err
-	}
-	provider.SetHTTPTimeout(5 * time.Second)
-	return ethrpc.New(provider)
 }
