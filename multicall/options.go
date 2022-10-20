@@ -6,7 +6,7 @@ type Option func(*Config)
 
 type Config struct {
 	MulticallAddress string
-	Gas				 string
+	Gas              string
 }
 
 const (
@@ -14,8 +14,9 @@ const (
 	MainnetAddress = "0x5eb3fa2dfecdde21c950813c665e9364fa609bd2"
 	// RopstenMulticall : Multicall contract address on Ropsten
 	RopstenAddress = "0xf3ad7e31b052ff96566eedd218a823430e74b406"
+	// GoerliMulticall : Multicall contract address on Goerli
+	GoerliAddress = "0xe94bf84d17e915416cb0db24e903006e7680d550"
 )
-
 
 func ContractAddress(address string) Option {
 	return func(c *Config) {

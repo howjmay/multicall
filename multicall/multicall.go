@@ -21,7 +21,7 @@ type multicall struct {
 
 func New(eth ethrpc.ETHInterface, opts ...Option) (Multicall, error) {
 	config := &Config{
-		MulticallAddress: MainnetAddress,
+		MulticallAddress: GoerliAddress,
 		Gas:              "0x400000000",
 	}
 
