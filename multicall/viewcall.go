@@ -207,20 +207,14 @@ func (calls ViewCalls) callData() ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	boolean, err := abi.NewType("bool", "", nil)
-	if err != nil {
-		return nil, err
-	}
 	args := abi.Arguments{
 		{Type: tupleArray, Name: "calls"},
-		{Type: boolean, Name: "strict"},
 	}
-	return args.Pack(payloadArgs, false)
+	return args.Pack(payloadArgs)
 }
 
 type retType struct {
-	Success bool
-	Data    []byte
+	callData []byte
 }
 
 type wrapperRet struct {
@@ -238,10 +232,7 @@ func (calls ViewCalls) decodeWrapper(raw string) (*wrapperRet, error) {
 	if err != nil {
 		return nil, err
 	}
-	returnType, err := abi.NewType("tuple[]", "", []abi.ArgumentMarshaling{
-		{Name: "Success", Type: "bool"},
-		{Name: "Data", Type: "bytes"},
-	})
+	returnType, err := abi.NewType("bytes[]", "", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -251,7 +242,7 @@ func (calls ViewCalls) decodeWrapper(raw string) (*wrapperRet, error) {
 			Type: uint256Type,
 		},
 		{
-			Name: "Returns",
+			Name: "callData",
 			Type: returnType,
 		},
 	}
@@ -266,8 +257,7 @@ func (calls ViewCalls) decodeWrapper(raw string) (*wrapperRet, error) {
 	for i := 0; i < returns.Len(); i++ {
 		elem := returns.Index(i)
 		ret := retType{
-			Success: elem.FieldByName("Success").Bool(),
-			Data:    elem.FieldByName("Data").Bytes(),
+			callData: elem.Bytes(),
 		}
 		decoded.Returns = append(decoded.Returns, ret)
 	}
@@ -285,8 +275,7 @@ func (calls ViewCalls) decodeRaw(raw string) (*Result, error) {
 
 	for index, call := range calls {
 		callResult := CallResult{
-			Success: decoded.Returns[index].Success,
-			Raw:     decoded.Returns[index].Data,
+			Raw:     decoded.Returns[index].callData,
 			Decoded: []interface{}{},
 		}
 		result.Calls[call.id] = callResult
@@ -305,16 +294,13 @@ func (calls ViewCalls) decode(raw string) (*Result, error) {
 	result.Calls = make(map[string]CallResult)
 	for index, call := range calls {
 		callResult := CallResult{
-			Success: decoded.Returns[index].Success,
-			Raw:     decoded.Returns[index].Data,
+			Raw: decoded.Returns[index].callData,
 		}
-		if decoded.Returns[index].Success {
-			returnValues, err := call.decode(decoded.Returns[index].Data)
-			if err != nil {
-				return nil, err
-			}
-			callResult.Decoded = returnValues
+		returnValues, err := call.decode(decoded.Returns[index].callData)
+		if err != nil {
+			return nil, err
 		}
+		callResult.Decoded = returnValues
 		result.Calls[call.id] = callResult
 	}
 

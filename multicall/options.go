@@ -11,11 +11,9 @@ type Config struct {
 
 const (
 	// MainnetMulticall : Multicall contract address on mainnet
-	MainnetAddress = "0x5eb3fa2dfecdde21c950813c665e9364fa609bd2"
-	// RopstenMulticall : Multicall contract address on Ropsten
-	RopstenAddress = "0xf3ad7e31b052ff96566eedd218a823430e74b406"
+	MainnetAddress = "0xeefba1e63905ef1d7acba5a8513c70307c1ce441"
 	// GoerliMulticall : Multicall contract address on Goerli
-	GoerliAddress = "0xe94bf84d17e915416cb0db24e903006e7680d550"
+	GoerliAddress = "0x77dca2c955b15e9de4dbbcf1246b4b85b651e50e"
 )
 
 func ContractAddress(address string) Option {
