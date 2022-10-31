@@ -36,7 +36,6 @@ func New(eth ethrpc.ETHInterface, opts ...Option) (Multicall, error) {
 }
 
 type CallResult struct {
-	Success bool
 	Raw     []byte
 	Decoded []interface{}
 }
@@ -46,7 +45,7 @@ type Result struct {
 	Calls       map[string]CallResult
 }
 
-const AggregateMethod = "0x17352e13"
+const AggregateMethod = "0x252dba42"
 
 func (mc multicall) CallRaw(calls ViewCalls, block string) (*Result, error) {
 	resultRaw, err := mc.sendRequest(calls, block)
