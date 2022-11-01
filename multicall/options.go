@@ -22,6 +22,24 @@ func ContractAddress(address string) Option {
 	}
 }
 
+const (
+	ChainID_Mainnet = 1
+	ChainID_Goerli  = 5
+)
+
+func SetContractByChainID(chainID uint32) Option {
+	return func(c *Config) {
+		switch chainID {
+		case ChainID_Mainnet:
+			c.MulticallAddress = MainnetAddress
+		case ChainID_Goerli:
+			c.MulticallAddress = GoerliAddress
+		default:
+			panic(fmt.Sprintf("unknown chain ID: %d", chainID))
+		}
+	}
+}
+
 func SetGas(gas uint64) Option {
 	return func(c *Config) {
 		c.Gas = fmt.Sprintf("0x%x", gas)
